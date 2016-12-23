@@ -1,0 +1,67 @@
+
+# Arduino/Genuino MKR1000 (ATSAMW25)
+mkr1000.name=Arduino/Genuino MKR1000
+mkr1000.vid.0=0x1D50
+mkr1000.pid.0=0x6110
+mkr1000.vid.1=0x1D50
+mkr1000.pid.1=0x6111
+mkr1000.vid.2=0x2341
+mkr1000.pid.2=0x804e
+mkr1000.vid.3=0x2341
+mkr1000.pid.3=0x004e
+mkr1000.vid.4=0x2341
+mkr1000.pid.4=0x824e
+mkr1000.vid.5=0x2341
+mkr1000.pid.5=0x024e
+mkr1000.bootloader.tool=openocd
+mkr1000.bootloader.file=bootloaders/mkr1000_sambar.bin
+mkr1000.bootloader.size=0x4000
+mkr1000.bootloader.NVMCTRL_BOOTPROT=0x01
+mkr1000.upload.tool=bossac
+mkr1000.upload.protocol=sam-ba
+mkr1000.upload.maximum_size=262144
+mkr1000.upload.use_1200bps_touch=true
+mkr1000.upload.wait_for_upload_port=true
+mkr1000.upload.native_usb=true
+mkr1000.build.mcu=cortex-m0plus
+mkr1000.build.f_cpu=48000000L
+mkr1000.build.board=SAMD_MKR1000
+mkr1000.build.variant=mkr1000
+mkr1000.build.core=arduino:arduino
+mkr1000.build.extra_flags=-D__SAMD21G18A__ {build.usb_flags}
+mkr1000.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+mkr1000.build.openocdscript=openocd_scripts/arduino_zero.cfg
+mkr1000.build.vid=0x1D50
+mkr1000.build.pid=0x6111
+mkr1000.build.usb_product="Arduino MKR1000"
+mkr1000.build.usb_manufacturer="Arduino LLC"
+
+
+# Eitech Robotics (ATSAMW25)
+robotics.name=Eitech Robotics
+robotics.vid.0=0x1D50
+robotics.pid.0=0x6110
+robotics.vid.1=0x1D50
+robotics.pid.1=0x6111
+robotics.bootloader.tool=openocd
+robotics.bootloader.file=bootloaders/robotics_sambar.bin
+robotics.bootloader.size=0x4000
+robotics.bootloader.NVMCTRL_BOOTPROT=0x01
+robotics.upload.tool=bossac
+robotics.upload.protocol=sam-ba
+robotics.upload.maximum_size=262144
+robotics.upload.use_1200bps_touch=true
+robotics.upload.wait_for_upload_port=true
+robotics.upload.native_usb=true
+robotics.build.mcu=cortex-m0plus
+robotics.build.f_cpu=48000000L
+robotics.build.board=SAMD_MKR1000
+robotics.build.variant=robotics
+robotics.build.core=arduino:arduino
+robotics.build.extra_flags=-D__SAMD21G18A__ {build.usb_flags}
+robotics.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+robotics.build.openocdscript=openocd_scripts/arduino_zero.cfg
+robotics.build.vid=0x1D50
+robotics.build.pid=0x6111
+robotics.build.usb_product="Eitech Robotics"
+robotics.build.usb_manufacturer="Eitech"
