@@ -37,7 +37,7 @@
 
 // Robotics J1...J7
 #define RJ1   (15) // PA02: D15 / A0
-#define RJ2   (25) // PA03: D25 / AREF
+#define RJ2   (25) // PA03: D25 / A7/AREF
 #define RJ3   (18) // PA04: D18 / A3
 #define RJ4   (19) // PA05: D19 / A4
 #define RJ5   (20) // PA06: D20 / A5
@@ -57,10 +57,10 @@
 #define RS1   (36) // PA30 / SWCLK
 
 // Number of pins defined in PinDescription array
-#define PINS_COUNT           (26u)
-#define NUM_DIGITAL_PINS     (22u)
-#define NUM_ANALOG_INPUTS    (7u)
-#define NUM_ANALOG_OUTPUTS   (1u)
+#define PINS_COUNT           (26u) // 26
+#define NUM_DIGITAL_PINS     (22u) // 22
+#define NUM_ANALOG_INPUTS    (8u)  // 7
+#define NUM_ANALOG_OUTPUTS   (1u)  // 1
 #define analogInputToDigitalPin(p)  ((p < 7u) ? (p) + 15u : -1)
 
 // Low-level pin register query macros
@@ -96,6 +96,7 @@
 #define PIN_A4   (19u)
 #define PIN_A5   (20u)
 #define PIN_A6   (21u)
+#define PIN_A7   (25u)
 #define PIN_DAC0 (15u)
 
 static const uint8_t A0   = PIN_A0;
@@ -105,6 +106,7 @@ static const uint8_t A3   = PIN_A3;
 static const uint8_t A4   = PIN_A4;
 static const uint8_t A5   = PIN_A5;
 static const uint8_t A6   = PIN_A6;
+static const uint8_t A7   = PIN_A7;
 static const uint8_t DAC0 = PIN_DAC0;
 #define ADC_RESOLUTION 12
 
