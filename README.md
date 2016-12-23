@@ -9,6 +9,9 @@ It is based on the following bootloaders:
 ## Features
 * Compatible with Atmel SAM-BA Bootloader (USB CDC)
 * Mass-Storage-Device Bootloader (USB MSD/MSC)
+* Fits in 16KB
 
 
 ## Software
+* [Bootloader Source Code](https://github.com/watterott/SAM-BAR/tree/master/software/bootloader)
+* [Board Support Package for Arduino IDE](https://github.com/watterott/SAM-BAR/tree/master/software/arduino)
