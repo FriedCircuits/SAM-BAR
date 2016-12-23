@@ -1,0 +1,31 @@
+{
+  "packages": [
+    {
+      "name": "sambar",
+      "maintainer": "Watterott electronic",
+      "websiteURL": "http://www.watterott.com",
+      "email": "",
+      "help": {"online": "https://github.com/watterott/SAM-BAR"},
+
+      "platforms": [
+        {
+          "name": "SAMD (ARM Cortex-M0+) Boards with SAM-BAR",
+          "architecture": "samd",
+          "version": "1.0.0",
+          "category": "contributed",
+          "help": {"online": "https://github.com/watterott/SAM-BAR"},
+          "url": "https://github.com/watterott/SAM-BAR/raw/b3263c23fc702d5552f66ba4bef5ba192cc2e758/software/arduino/sambar.zip",
+          "archiveFileName": "sambar-1.0.0.zip",
+          "size": "58160",
+          "boards": [
+            {"name": "Arduino/Genuino MKR1000"},
+            {"name": "Eitech Robotics"}
+          ]
+        }
+      ],
+
+      "tools": [
+      ]
+    }
+  ]
+}
