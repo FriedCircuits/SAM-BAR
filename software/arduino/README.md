@@ -8,6 +8,8 @@ Add the following URL to the Arduino Boards Manager (*File->Preferences*):
 ```
 https://github.com/watterott/SAM-BAR/raw/master/software/arduino/package_sambar_index.json
 ```
-and install the **SAMD (ARM Cortex-M0+) Boards with SAM-BAR** via the Boards Manager (*Tools->Boards->Boards Manager*).
+Then open the Arduino Boards Manager (*Tools->Boards->Boards Manager*) and install the 
+**Arduino SAMD Boards** and **SAMD (ARM Cortex-M0+) Boards with SAM-BAR**.
+
 
 The Windows drivers are included with the BSP or can be found [here](https://github.com/watterott/SAM-BAR/tree/master/software/arduino/sambar/samd/drivers).
