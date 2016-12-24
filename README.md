@@ -7,9 +7,9 @@ It is based on the following bootloaders:
 
 
 ## Features
-* Compatible with Atmel SAM-BA Bootloader (USB CDC)
+* Compatible with Atmel SAM-BA Bootloader and Arduino Zero/MKR1000 Bootloader (USB CDC)
 * Mass-Storage-Device Bootloader (USB MSD/MSC)
-* Fits in 16KB
+* Fits in 16KB (user program start at 0x4000)
 
 
 ## Software
