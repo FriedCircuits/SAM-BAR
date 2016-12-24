@@ -256,248 +256,248 @@ bool start_upload_flag = true;
  */
 void sam_ba_monitor_run(void)
 {
-		//length = ptr_monitor_if->getdata(data, sizeof(data));  
-		length = udi_cdc_read_no_polling(data, sizeof(data));
-				
-		ptr = data;
-		for (i = 0; i < length; i++)
+	//length = ptr_monitor_if->getdata(data, sizeof(data));
+	length = udi_cdc_read_no_polling(data, sizeof(data));
+
+	ptr = data;
+	for (i = 0; i < length; i++)
+	{
+		if (*ptr != 0xff)
 		{
-			if (*ptr != 0xff)
+			if (*ptr == '#')
 			{
-				if (*ptr == '#')
+				if (b_terminal_mode)
 				{
-					if (b_terminal_mode)
+					//ptr_monitor_if->putdata("\n\r", 2);
+					udi_cdc_write_buf("\n\r", 2);
+				}
+				if (command == 'S')
+				{
+					// Check if some data are remaining in the "data" buffer
+					if(length>i)
 					{
-						//ptr_monitor_if->putdata("\n\r", 2);
-						udi_cdc_write_buf("\n\r", 2);
-					}
-					if (command == 'S')
-					{
-						// Check if some data are remaining in the "data" buffer
-						if(length>i)
+						// Move current indexes to next avail data (currently ptr points to "#")
+						ptr++;
+						i++;
+						// We need to add first the remaining data of the current buffer already read from usb
+						// read a maximum of "current_number" bytes
+						u32tmp = min((length-i), current_number);
+
+						for(j=0; j<u32tmp; j++)
 						{
-							// Move current indexes to next avail data (currently ptr points to "#")
+							*ptr_data = *ptr;
+							ptr_data++;
 							ptr++;
 							i++;
-							// We need to add first the remaining data of the current buffer already read from usb
-							// read a maximum of "current_number" bytes
-							u32tmp = min((length-i), current_number);
-
-							for(j=0; j<u32tmp; j++)
-							{
-								*ptr_data = *ptr;
-								ptr_data++;
-								ptr++;
-								i++;
-							}
 						}
-						// update i with the data read from the buffer
-						i--;
-						ptr--;
-						// Do we expect more data ?
-						if(j < current_number)
-						{
-							//ptr_monitor_if->getdata_xmd(ptr_data, current_number-j);
-							udi_cdc_read_buf(ptr_data, current_number-j);
-						}
+					}
+					// update i with the data read from the buffer
+					i--;
+					ptr--;
+					// Do we expect more data ?
+					if(j < current_number)
+					{
+						//ptr_monitor_if->getdata_xmd(ptr_data, current_number-j);
+						udi_cdc_read_buf(ptr_data, current_number-j);
+					}
 
-					}
-					else if (command == 'R')
-					{
-						//ptr_monitor_if->putdata_xmd(ptr_data, current_number);
-						//ptr_monitor_if->putdata(ptr_data, current_number); // usb = no xmodem
-						udi_cdc_write_buf(ptr_data, current_number);
-					}
-					else if (command == 'O')
-					{
-						*ptr_data = (char) current_number;
-					}
-					else if (command == 'H')
-					{
-						*((uint16_t *) ptr_data) = (uint16_t) current_number;
-					}
-					else if (command == 'W')
-					{
-						*((int *) ptr_data) = current_number;
-					}
-					else if (command == 'o')
-					{
-						sam_ba_putdata_term(ptr_data, 1);
-					}
-					else if (command == 'h')
-					{
-						current_number = *((uint16_t *) ptr_data);
-						sam_ba_putdata_term((uint8_t*) &current_number, 2);
-					}
-					else if (command == 'w')
-					{
-						current_number = *((uint32_t *) ptr_data);
-						sam_ba_putdata_term((uint8_t*) &current_number, 4);
-					}
-					else if (command == 'G')
-					{
-						call_applet(current_number);
-						/* Rebase the Stack Pointer */
-						__set_MSP(sp);
-						cpu_irq_enable();
-					}
-					else if (command == 'T')
-					{
-						b_terminal_mode = 1;
-						//ptr_monitor_if->putdata("\n\r", 2);
-						udi_cdc_write_buf("\n\r", 2);
-					}
-					else if (command == 'N')
-					{
-						if (b_terminal_mode == 0)
-						{
-							//ptr_monitor_if->putdata("\n\r", 2);
-							udi_cdc_write_buf("\n\r", 2);
-						}
-						b_terminal_mode = 0;
-					}
-					else if (command == 'V')
-					{
-						//ptr_monitor_if->putdata("v", 1);
-						udi_cdc_write_buf("v", 1);
-						//ptr_monitor_if->putdata((uint8_t *) RomBOOT_Version, strlen(RomBOOT_Version));
-						udi_cdc_write_buf((uint8_t *) RomBOOT_Version, strlen(RomBOOT_Version));
-						//ptr_monitor_if->putdata(" ", 1);
-						udi_cdc_write_buf(" ", 1);
-						ptr = (uint8_t*) &(__DATE__);
-						i = 0;
-						while (*ptr++ != '\0')
-							i++;
-						//ptr_monitor_if->putdata((uint8_t *) &(__DATE__), i);
-						udi_cdc_write_buf((uint8_t *) &(__DATE__), i);
-						//ptr_monitor_if->putdata(" ", 1);
-						udi_cdc_write_buf(" ", 1);
-						i = 0;
-						ptr = (uint8_t*) &(__TIME__);
-						while (*ptr++ != '\0')
-							i++;
-						//ptr_monitor_if->putdata((uint8_t *) &(__TIME__), i);
-						udi_cdc_write_buf((uint8_t *) &(__TIME__), i);
-						//ptr_monitor_if->putdata("\n\r", 2);
-						udi_cdc_write_buf("\n\r", 2);
-					}
-					else if (command == 'X') // Arduino extension
-					{
-						// Syntax: X[ADDR]#
-						// Erase the flash memory starting from ADDR to the end of flash.
-
-						// Note: the flash memory is erased in ROWS, that is in block of 4 pages.
-						//       Even if the starting address is the last byte of a ROW the entire
-						//       ROW is erased anyway.
-
-						flash_erase(current_number, MAX_FLASH - current_number);
-						
-						// Notify command completed
-						//ptr_monitor_if->putdata("X\n\r", 3);
-						udi_cdc_write_buf("X\n\r", 3);
-						
-						start_upload_flag = true;			// set flag 
-					}
-					else if (command == 'Y')  // Arduino extension
-					{
-						// This command writes the content of a buffer in SRAM into flash memory.
-
-						// Syntax: Y[ADDR],0#
-						// Set the starting address of the SRAM buffer.
-
-						// Syntax: Y[ROM_ADDR],[SIZE]#
-						// Write the first SIZE bytes from the SRAM buffer (previously set) into
-						// flash memory starting from address ROM_ADDR
-
-						static uint32_t *src_buff_addr = NULL;
-
-						if (current_number == 0)
-						{
-							// Set buffer address						
-							src_buff_addr = (uint32_t*)ptr_data;
-						}
-						else
-						{							
-							// BOSSA uses a fixed APP_START_ADDRESS (0x2000) at the moment. If the bootloader is bigger, we have 
-							// to add an offset to get the right flash address.
-							if(start_upload_flag)
-							{
-								start_upload_flag = false;
-								if((uint32_t)ptr_data < APP_START_ADDRESS)
-									additional_offset = APP_START_ADDRESS - (uint32_t)ptr_data;
-								else
-									additional_offset = 0;
-							}
-							
-							// Write to flash
-							flash_write_to((uint32_t*)((uint32_t)ptr_data + additional_offset), src_buff_addr, current_number);
-						}
-
-						// Notify command completed
-						//ptr_monitor_if->putdata("Y\n\r", 3);
-						udi_cdc_write_buf("Y\n\r", 3);
-					}
-					else if (command == 'Z')  // Arduino extension
-					{
-						// This command calculate CRC for a given area of memory.
-						// It's useful to quickly check if a transfer has been done
-						// successfully.
-
-						// Syntax: Z[START_ADDR],[SIZE]#
-						// Returns: Z[CRC]#
-
-						uint8_t *data2 = (uint8_t *)(ptr_data + additional_offset);
-						uint16_t crc = crc16(data2, current_number);						
-
-						// Send response
-						//ptr_monitor_if->putdata("Z", 1);
-						udi_cdc_write_buf("Z", 1);
-						put_uint32(crc);
-						//ptr_monitor_if->putdata("#\n\r", 3);
-						udi_cdc_write_buf("#\n\r", 3);
-					}
-					
-					command = 'z';
-					current_number = 0;
-
-					if (b_terminal_mode)
-					{
-						//ptr_monitor_if->putdata(">", 1);
-						udi_cdc_write_buf(">", 1);
-					}
 				}
-				else
+				else if (command == 'R')
 				{
-					if (('0' <= *ptr) && (*ptr <= '9'))
+					//ptr_monitor_if->putdata_xmd(ptr_data, current_number);
+					//ptr_monitor_if->putdata(ptr_data, current_number); // usb = no xmodem
+					udi_cdc_write_buf(ptr_data, current_number);
+				}
+				else if (command == 'O')
+				{
+					*ptr_data = (char) current_number;
+				}
+				else if (command == 'H')
+				{
+					*((uint16_t *) ptr_data) = (uint16_t) current_number;
+				}
+				else if (command == 'W')
+				{
+					*((int *) ptr_data) = current_number;
+				}
+				else if (command == 'o')
+				{
+					sam_ba_putdata_term(ptr_data, 1);
+				}
+				else if (command == 'h')
+				{
+					current_number = *((uint16_t *) ptr_data);
+					sam_ba_putdata_term((uint8_t*) &current_number, 2);
+				}
+				else if (command == 'w')
+				{
+					current_number = *((uint32_t *) ptr_data);
+					sam_ba_putdata_term((uint8_t*) &current_number, 4);
+				}
+				else if (command == 'G')
+				{
+					call_applet(current_number);
+					/* Rebase the Stack Pointer */
+					__set_MSP(sp);
+					cpu_irq_enable();
+				}
+				else if (command == 'T')
+				{
+					b_terminal_mode = 1;
+					//ptr_monitor_if->putdata("\n\r", 2);
+					udi_cdc_write_buf("\n\r", 2);
+				}
+				else if (command == 'N')
+				{
+					if (b_terminal_mode == 0)
 					{
-						current_number = (current_number << 4) | (*ptr - '0');
-
+						//ptr_monitor_if->putdata("\n\r", 2);
+						udi_cdc_write_buf("\n\r", 2);
 					}
-					else if (('A' <= *ptr) && (*ptr <= 'F'))
-					{
-						current_number = (current_number << 4)
-								| (*ptr - 'A' + 0xa);
+					b_terminal_mode = 0;
+				}
+				else if (command == 'V')
+				{
+					//ptr_monitor_if->putdata("v", 1);
+					udi_cdc_write_buf("v", 1);
+					//ptr_monitor_if->putdata((uint8_t *) RomBOOT_Version, strlen(RomBOOT_Version));
+					udi_cdc_write_buf((uint8_t *) RomBOOT_Version, strlen(RomBOOT_Version));
+					//ptr_monitor_if->putdata(" ", 1);
+					udi_cdc_write_buf(" ", 1);
+					ptr = (uint8_t*) &(__DATE__);
+					i = 0;
+					while (*ptr++ != '\0')
+						i++;
+					//ptr_monitor_if->putdata((uint8_t *) &(__DATE__), i);
+					udi_cdc_write_buf((uint8_t *) &(__DATE__), i);
+					//ptr_monitor_if->putdata(" ", 1);
+					udi_cdc_write_buf(" ", 1);
+					i = 0;
+					ptr = (uint8_t*) &(__TIME__);
+					while (*ptr++ != '\0')
+						i++;
+					//ptr_monitor_if->putdata((uint8_t *) &(__TIME__), i);
+					udi_cdc_write_buf((uint8_t *) &(__TIME__), i);
+					//ptr_monitor_if->putdata("\n\r", 2);
+					udi_cdc_write_buf("\n\r", 2);
+				}
+				else if (command == 'X') // Arduino extension
+				{
+					// Syntax: X[ADDR]#
+					// Erase the flash memory starting from ADDR to the end of flash.
 
-					}
-					else if (('a' <= *ptr) && (*ptr <= 'f'))
-					{
-						current_number = (current_number << 4)
-								| (*ptr - 'a' + 0xa);
+					// Note: the flash memory is erased in ROWS, that is in block of 4 pages.
+					//       Even if the starting address is the last byte of a ROW the entire
+					//       ROW is erased anyway.
 
-					}
-					else if (*ptr == ',')
-					{
-						ptr_data = (uint8_t *) current_number;
-						current_number = 0;
+					flash_erase(current_number, MAX_FLASH - current_number);
 
+					// Notify command completed
+					//ptr_monitor_if->putdata("X\n\r", 3);
+					udi_cdc_write_buf("X\n\r", 3);
+
+					start_upload_flag = true;			// set flag 
+				}
+				else if (command == 'Y')  // Arduino extension
+				{
+					// This command writes the content of a buffer in SRAM into flash memory.
+
+					// Syntax: Y[ADDR],0#
+					// Set the starting address of the SRAM buffer.
+
+					// Syntax: Y[ROM_ADDR],[SIZE]#
+					// Write the first SIZE bytes from the SRAM buffer (previously set) into
+					// flash memory starting from address ROM_ADDR
+
+					static uint32_t *src_buff_addr = NULL;
+
+					if (current_number == 0)
+					{
+						// Set buffer address
+						src_buff_addr = (uint32_t*)ptr_data;
 					}
 					else
 					{
-						command = *ptr;
-						current_number = 0;
+						// BOSSA uses a fixed APP_START_ADDRESS (0x2000) at the moment. If the bootloader is bigger, we have 
+						// to add an offset to get the right flash address.
+						if(start_upload_flag)
+						{
+							start_upload_flag = false;
+							if((uint32_t)ptr_data < APP_START_ADDRESS)
+								additional_offset = APP_START_ADDRESS - (uint32_t)ptr_data;
+							else
+								additional_offset = 0;
+						}
+
+						// Write to flash
+						flash_write_to((uint32_t*)((uint32_t)ptr_data + additional_offset), src_buff_addr, current_number);
 					}
+
+					// Notify command completed
+					//ptr_monitor_if->putdata("Y\n\r", 3);
+					udi_cdc_write_buf("Y\n\r", 3);
 				}
-				ptr++;
+				else if (command == 'Z')  // Arduino extension
+				{
+					// This command calculate CRC for a given area of memory.
+					// It's useful to quickly check if a transfer has been done
+					// successfully.
+
+					// Syntax: Z[START_ADDR],[SIZE]#
+					// Returns: Z[CRC]#
+
+					uint8_t *data2 = (uint8_t *)(ptr_data + additional_offset);
+					uint16_t crc = crc16(data2, current_number);
+
+					// Send response
+					//ptr_monitor_if->putdata("Z", 1);
+					udi_cdc_write_buf("Z", 1);
+					put_uint32(crc);
+					//ptr_monitor_if->putdata("#\n\r", 3);
+					udi_cdc_write_buf("#\n\r", 3);
+				}
+
+				command = 'z';
+				current_number = 0;
+
+				if (b_terminal_mode)
+				{
+					//ptr_monitor_if->putdata(">", 1);
+					udi_cdc_write_buf(">", 1);
+				}
 			}
+			else
+			{
+				if (('0' <= *ptr) && (*ptr <= '9'))
+				{
+					current_number = (current_number << 4) | (*ptr - '0');
+
+				}
+				else if (('A' <= *ptr) && (*ptr <= 'F'))
+				{
+					current_number = (current_number << 4)
+							| (*ptr - 'A' + 0xa);
+
+				}
+				else if (('a' <= *ptr) && (*ptr <= 'f'))
+				{
+					current_number = (current_number << 4)
+							| (*ptr - 'a' + 0xa);
+
+				}
+				else if (*ptr == ',')
+				{
+					ptr_data = (uint8_t *) current_number;
+					current_number = 0;
+
+				}
+				else
+				{
+					command = *ptr;
+					current_number = 0;
+				}
+			}
+			ptr++;
 		}
+	}
 }
