@@ -1,6 +1,6 @@
 
-# Arduino/Genuino MKR1000 (ATSAMW25)
-mkr1000.name=Arduino/Genuino MKR1000
+# Arduino MKR1000
+mkr1000.name=Arduino MKR1000
 mkr1000.vid.0=0x1D50
 mkr1000.pid.0=0x6112
 mkr1000.vid.1=0x1D50
@@ -37,7 +37,79 @@ mkr1000.build.usb_product="Arduino MKR1000"
 mkr1000.build.usb_manufacturer="Arduino LLC"
 
 
-# Eitech Robotics (ATSAMW25)
+# Arduino MKRZero
+mkrzero.name=Arduino MKRZero
+mkrzero.vid.0=0x1D50
+mkrzero.pid.0=0x6112
+mkrzero.vid.1=0x1D50
+mkrzero.pid.1=0x6113
+mkrzero.vid.2=0x2341
+mkrzero.pid.2=0x804f
+mkrzero.vid.3=0x2341
+mkrzero.pid.3=0x004f
+mkrzero.bootloader.tool=openocd
+mkrzero.bootloader.file=mkrzero_sambar.bin
+mkrzero.bootloader.size=0x4000
+mkrzero.bootloader.NVMCTRL_BOOTPROT=0x01
+mkrzero.upload.tool=bossac
+mkrzero.upload.protocol=sam-ba
+mkrzero.upload.maximum_size=262144
+mkrzero.upload.use_1200bps_touch=true
+mkrzero.upload.wait_for_upload_port=true
+mkrzero.upload.native_usb=true
+mkrzero.build.mcu=cortex-m0plus
+mkrzero.build.f_cpu=48000000L
+mkrzero.build.board=SAMD_MKRZERO
+mkrzero.build.variant=mkrzero
+mkrzero.build.core=arduino:arduino
+mkrzero.build.extra_flags=-D__SAMD21G18A__ {build.usb_flags}
+mkrzero.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+mkrzero.build.openocdscript=openocd_scripts/arduino_zero.cfg
+mkrzero.build.vid=0x1D50
+mkrzero.build.pid=0x6113
+mkrzero.build.usb_product="Arduino MKRZero"
+mkrzero.build.usb_manufacturer="Arduino LLC"
+
+
+# Arduino Zero
+zero.name=Arduino Zero (Native USB Port)
+zero.vid.0=0x1D50
+zero.pid.0=0x6112
+zero.vid.1=0x1D50
+zero.pid.1=0x6113
+zero.vid.2=0x2341
+zero.pid.2=0x804d
+zero.vid.3=0x2341
+zero.pid.3=0x004d
+zero.vid.4=0x2341
+zero.pid.4=0x824d
+zero.vid.5=0x2341
+zero.pid.5=0x024d
+zero.bootloader.tool=openocd
+zero.bootloader.file=zero_sambar.bin
+zero.bootloader.size=0x4000
+zero.bootloader.NVMCTRL_BOOTPROT=0x01
+zero.upload.tool=bossac
+zero.upload.protocol=sam-ba
+zero.upload.maximum_size=262144
+zero.upload.use_1200bps_touch=true
+zero.upload.wait_for_upload_port=true
+zero.upload.native_usb=true
+zero.build.mcu=cortex-m0plus
+zero.build.f_cpu=48000000L
+zero.build.board=SAMD_ZERO
+zero.build.variant=arduino_zero
+zero.build.core=arduino:arduino
+zero.build.extra_flags=-D__SAMD21G18A__ {build.usb_flags}
+zero.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+zero.build.openocdscript=openocd_scripts/arduino_zero.cfg
+zero.build.vid=0x1D50
+zero.build.pid=0x6113
+zero.build.usb_product="Arduino Zero"
+zero.build.usb_manufacturer="Arduino LLC"
+
+
+# Eitech Robotics
 robotics.name=Eitech Robotics
 robotics.vid.0=0x1D50
 robotics.pid.0=0x6110
