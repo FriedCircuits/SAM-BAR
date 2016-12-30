@@ -11,6 +11,22 @@
         {
           "name": "SAMD (ARM Cortex-M0+) Boards with SAM-BAR",
           "architecture": "samd",
+          "version": "1.0.1",
+          "category": "contributed",
+          "help": {"online": "https://github.com/watterott/SAM-BAR"},
+          "url": "https://github.com/watterott/SAM-BAR/raw/793dd2952a12c13cac0af8ec501e063ff187487a/software/arduino/sambar.zip",
+          "archiveFileName": "sambar-1.0.1.zip",
+          "size": "107370",
+          "boards": [
+            {"name": "Arduino MKR1000"},
+            {"name": "Arduino MKRZero"},
+            {"name": "Arduino Zero"},
+            {"name": "Eitech Robotics"}
+          ]
+        },
+        {
+          "name": "SAMD (ARM Cortex-M0+) Boards with SAM-BAR",
+          "architecture": "samd",
           "version": "1.0.0",
           "category": "contributed",
           "help": {"online": "https://github.com/watterott/SAM-BAR"},
