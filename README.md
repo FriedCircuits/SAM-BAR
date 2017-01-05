@@ -7,7 +7,7 @@ It is based on the following bootloaders:
 
 
 ## Features
-* SAM-BA and Arduino Zero compatible Bootloader (USB CDC)
+* SAM-BA and Arduino Zero compatible Bootloader (USB CDC/VCP)
 * Mass-Storage-Device Bootloader (USB MSD/MSC)
 * Fits in 16KB (user program start at 0x4000)
 
