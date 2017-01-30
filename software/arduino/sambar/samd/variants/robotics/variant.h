@@ -36,25 +36,25 @@
 // ----
 
 // Robotics J1...J7
-#define RJ1   (15) // PA02: D15 / A0
-#define RJ2   (25) // PA03: D25 / A7/AREF
-#define RJ3   (18) // PA04: D18 / A3
-#define RJ4   (19) // PA05: D19 / A4
-#define RJ5   (20) // PA06: D20 / A5
-#define RJ6   (21) // PA07: D21 / A6
-#define RJ7   (16) // PB02: D16 / A1
+#define RJ1   (15u) // PA02: D15 / A0
+#define RJ2   (25u) // PA03: D25 / A7/AREF
+#define RJ3   (18u) // PA04: D18 / A3
+#define RJ4   (19u) // PA05: D19 / A4
+#define RJ5   (20u) // PA06: D20 / A5
+#define RJ6   (21u) // PA07: D21 / A6
+#define RJ7   (16u) // PB02: D16 / A1
 // Robotics M1...M4
-#define RM1A   (7) // PA21: D7
-#define RM1B   (6) // PA20: D6
-#define RM2A   (1) // PA23: D1
-#define RM2B   (0) // PA22: D0
-#define RM3A   (3) // PA11: D3
-#define RM3B   (2) // PA10: D2
-#define RM4A   (5) // PB11: D5
-#define RM4B   (4) // PB10: D4
-#define RVBB  (17) // PB3: D17 / A2
+#define RM1A   (7u) // PA21: D7
+#define RM1B   (6u) // PA20: D6
+#define RM2A   (1u) // PA23: D1
+#define RM2B   (0u) // PA22: D0
+#define RM3A   (3u) // PA11: D3
+#define RM3B   (2u) // PA10: D2
+#define RM4A   (5u) // PB11: D5
+#define RM4B   (4u) // PB10: D4
+#define RVBB  (17u) // PB3: D17 / A2
 // Robotics S1
-#define RS1   (36) // PA30 / SWCLK
+#define RS1   (37u) // PA31 / SWDIO (Dev-Edition: PA30 / SWCLK)
 
 // Number of pins defined in PinDescription array
 #define PINS_COUNT           (26u) // 26
@@ -84,7 +84,7 @@
 
 // LEDs
 // ----
-#define PIN_LED     (37u)
+#define PIN_LED     (36u) // PA30 / SWCLK (Dev-Edition: PA31 / SWDIO)
 #define LED_BUILTIN PIN_LED
 
 // Analog pins
@@ -154,9 +154,9 @@ static const uint8_t SCL = PIN_WIRE_SCL;
 
 // USB
 // ---
-#define PIN_USB_DM          (22ul)
-#define PIN_USB_DP          (23ul)
-#define PIN_USB_HOST_ENABLE (24ul)
+#define PIN_USB_DM          (22u)
+#define PIN_USB_DP          (23u)
+#define PIN_USB_HOST_ENABLE (24u)
 
 // Needed for WINC1501B (WiFi101) library
 // --------------------------------------
@@ -183,8 +183,8 @@ extern SERCOM sercom5;
 
 // Serial1
 extern Uart Serial1;
-#define PIN_SERIAL1_RX (13ul)
-#define PIN_SERIAL1_TX (14ul)
+#define PIN_SERIAL1_RX (13u)
+#define PIN_SERIAL1_TX (14u)
 #define PAD_SERIAL1_TX (UART_TX_PAD_2)
 #define PAD_SERIAL1_RX (SERCOM_RX_PAD_3)
 #endif // __cplusplus
